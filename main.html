@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Magic 4 game</title>
+		<style>
+			/* Some basic styling */
+			body {
+				font-family: Arial, sans-serif;
+				margin: 0;
+				padding: 0;
+				background-color: #f4f4f4;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				height: 100vh;
+			}
+			.container {
+				text-align: center; /* Center text within container */
+			}
+			h1 {
+				color: #333;
+			}
+			button {
+				padding: 10px 20px;
+				background-color: #007bff;
+				color: #fff;
+				border: none;
+				border-radius: 5px;
+				cursor: pointer;
+				font-size: 16px;
+			}
+			button:hover {
+				background-color: #0056b3;
+			}
+			p {
+				color: #666;
+			}
+			input[type="number"] {
+				padding: 10px;
+				width: 200px;
+				border-radius: 5px;
+				border: 1px solid #ccc;
+				box-sizing: border-box;
+				font-size: 16px;
+				margin-bottom: 10px;
+			}
+			#messageInput {
+				width: 100%;
+				padding: 10px;
+				margin-bottom: 10px;
+				box-sizing: border-box;
+			}
+			#messageList {
+				list-style-type: none;
+				padding: 0;
+			}
+			.message {
+				background-color: #fff;
+				padding: 10px;
+				margin-bottom: 5px;
+				border-radius: 5px;
+				box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+			}
+		</style>
+	</head>
+	<body>
+		<div class="container">
+			<h1>4 is a Magic Number</h1>
+			<input
+				type="number"
+				id="userNumber"
+				placeholder="Pick any whole number"
+				onkeydown="if(event.keyCode===13)document.getElementById('magicButton').click()"
+			/>
+			<button id="magicButton" onclick="checkMagicNumber()">See the Magic</button>
+			<p id="result"></p>
+		</div>
+
+		<script>
+			function checkMagicNumber() {
+				var userNumber = parseInt(document.getElementById("userNumber").value);
+				var resultElement = document.getElementById("result");
+				var numberAsWords, newNumber;
+
+				// Clear previous content
+				resultElement.innerHTML = "";
+
+				var interval = setInterval(function () {
+					// Convert userNumber to words
+					numberAsWords = numberToWords(userNumber);
+
+					// Calculate the length of the word representation
+					newNumber = numberAsWords.length;
+
+					// Display the transformation on a new line
+					resultElement.innerHTML += userNumber + " is " + newNumber + "<br>";
+
+					// Update userNumber with the new count
+					userNumber = newNumber;
+
+					if (userNumber === 4) {
+						clearInterval(interval); // Stop the interval if userNumber is 4
+						setTimeout(function () {
+							resultElement.innerHTML += "<br>And " + userNumber + " is a magic number!";
+						}, 500); // Delay of 0.5 seconds before displaying the final message
+					}
+				}, 500); // Interval of 0.5 seconds between each line
+			}
+
+			// Function to convert a number to its word representation
+			function numberToWords(number) {
+				// Check for easter eggs
+				var easterEggs = {
+					69: "Nice ;)",
+					420: "Be responsible!",
+					8675309: "You're old...",
+					20: "God's number!... It's a Rubik's Cube thing... Look it up!",
+					9001: "It's over 9000!",
+					42: "The answer to the Ultimate Question of Life, the Universe, and Everything",
+					1988: "Say hi to Doc Brown for me!",
+					101: "Like the dogs?",
+					151: "Mew!",
+					616: "The Best Universe",
+					3000: "I love you 3000",
+				};
+
+				// Check if the number is an Easter egg
+				if (easterEggs[number]) {
+					return easterEggs[number] + "<br>" + convertToWords(number); // Append Easter egg message with the result
+				}
+
+				// If not an Easter egg, convert the number to words using the convertToWords function
+				return convertToWords(number);
+			}
+
+			// Function to convert a number to its word representation
+			function convertToWords(number) {
+				// Main logic for number conversion
+				// Array of words for single-digit numbers
+				var words = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"];
+				var teens = ["", "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen"];
+				var tens = ["", "", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety"];
+				var scales = ["", "thousand", "million", "billion", "trillion", "quadrillion", "quintillion"];
+
+				// If number is a single digit, return its word representation
+				if (number >= 0 && number <= 9) {
+					return words[number];
+				}
+
+				// If number is 10, return its word representation
+				if (number === 10) {
+					return "ten";
+				}
+
+				// If number is between 11 and 19, return the word representation for teens
+				if (number >= 11 && number <= 19) {
+					return teens[number - 10];
+				}
+
+				// If number is a two-digit number (excluding teens), return its word representation
+				if (number >= 20 && number <= 99) {
+					var digit1 = Math.floor(number / 10);
+					var digit2 = number % 10;
+					return tens[digit1] + (digit2 !== 0 ? " " + words[digit2] : "");
+				}
+
+				// If number is a three-digit number, return its word representation
+				if (number >= 100 && number <= 999) {
+					var digit1 = Math.floor(number / 100);
+					var remainingDigits = number % 100;
+					return words[digit1] + " hundred" + (remainingDigits !== 0 ? " and " + convertToWords(remainingDigits) : "");
+				}
+
+				// Iterate through scales (thousands, millions, billions, etc.)
+				for (var i = 1; i < scales.length; i++) {
+					var divisor = Math.pow(1000, i);
+					if (number < divisor * 1000) {
+						var quotient = Math.floor(number / divisor);
+						var remainder = number % divisor;
+						return convertToWords(quotient) + " " + scales[i] + (remainder !== 0 ? " " + convertToWords(remainder) : "");
+					}
+				}
+
+				// If number is exactly 1000, return its word representation
+				if (number === 1000) {
+					return "one thousand";
+				}
+
+				// For other cases (numbers greater than 1000), return an empty string
+				return "";
+			}
+		</script>
+	</body>
+</html>
