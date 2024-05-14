@@ -84,6 +84,22 @@
 				var resultElement = document.getElementById("result");
 				var numberAsWords, newNumber;
 
+				// Check for easter eggs
+				var easterEggs = {
+					69: "Nice ;)",
+					420: "Be responsible!",
+					8675309: "You're old...",
+					20: "God's number!... It's a Rubik's Cube thing... Look it up!",
+					9001: "It's over 9000!",
+					42: "The answer to the Ultimate Question of Life, the Universe, and Everything",
+					1988: "Say hi to Doc Brown for me!",
+					101: "Like the dogs?",
+					151: "Mew!",
+					616: "The Best Universe",
+					3000: "I love you 3000",
+					666: 'Devil "Hey! thats mine!"',
+				};
+
 				// Clear previous content
 				resultElement.innerHTML = "";
 
@@ -93,6 +109,11 @@
 
 					// Calculate the length of the word representation
 					newNumber = numberAsWords.length;
+
+					// Check if the number is an Easter egg
+					if (easterEggs[userNumber]) {
+						resultElement.innerHTML += easterEggs[userNumber] + "<br>";
+					}
 
 					// Display the transformation on a new line
 					resultElement.innerHTML += userNumber + " is " + newNumber + "<br>";
@@ -111,32 +132,6 @@
 
 			// Function to convert a number to its word representation
 			function numberToWords(number) {
-				// Check for easter eggs
-				var easterEggs = {
-					69: "Nice ;)",
-					420: "Be responsible!",
-					8675309: "You're old...",
-					20: "God's number!... It's a Rubik's Cube thing... Look it up!",
-					9001: "It's over 9000!",
-					42: "The answer to the Ultimate Question of Life, the Universe, and Everything",
-					1988: "Say hi to Doc Brown for me!",
-					101: "Like the dogs?",
-					151: "Mew!",
-					616: "The Best Universe",
-					3000: "I love you 3000",
-				};
-
-				// Check if the number is an Easter egg
-				if (easterEggs[number]) {
-					return easterEggs[number] + "<br>" + convertToWords(number); // Append Easter egg message with the result
-				}
-
-				// If not an Easter egg, convert the number to words using the convertToWords function
-				return convertToWords(number);
-			}
-
-			// Function to convert a number to its word representation
-			function convertToWords(number) {
 				// Main logic for number conversion
 				// Array of words for single-digit numbers
 				var words = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"];
@@ -166,11 +161,11 @@
 					return tens[digit1] + (digit2 !== 0 ? " " + words[digit2] : "");
 				}
 
-				// If number is a three-digit number, return its word representation
+				// If number is a three-digit number
 				if (number >= 100 && number <= 999) {
 					var digit1 = Math.floor(number / 100);
 					var remainingDigits = number % 100;
-					return words[digit1] + " hundred" + (remainingDigits !== 0 ? " and " + convertToWords(remainingDigits) : "");
+					return words[digit1] + " hundred" + (remainingDigits !== 0 ? " and " + numberToWords(remainingDigits) : "");
 				}
 
 				// Iterate through scales (thousands, millions, billions, etc.)
@@ -179,7 +174,7 @@
 					if (number < divisor * 1000) {
 						var quotient = Math.floor(number / divisor);
 						var remainder = number % divisor;
-						return convertToWords(quotient) + " " + scales[i] + (remainder !== 0 ? " " + convertToWords(remainder) : "");
+						return numberToWords(quotient) + " " + scales[i] + (remainder !== 0 ? " " + numberToWords(remainder) : "");
 					}
 				}
 
