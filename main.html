@@ -18,6 +18,7 @@
 			}
 			.container {
 				text-align: center; /* Center text within container */
+				position: relative; /* Position container relatively for absolute positioning of buttons */
 			}
 			h1 {
 				color: #333;
@@ -63,6 +64,52 @@
 				border-radius: 5px;
 				box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 			}
+			#hintButton {
+				position: fixed;
+				top: 10px;
+				right: 50px;
+				padding: 5px 10px;
+				background-color: #007bff;
+				color: #fff;
+				border: none;
+				border-radius: 5px;
+				cursor: pointer;
+				font-size: 14px;
+			}
+			#hintMessage {
+				position: fixed;
+				top: 50px;
+				right: 10px;
+				width: calc(50% - 20px); /* Adjust the width according to container width */
+				background-color: #fff;
+				border: 1px solid #ccc;
+				border-radius: 5px;
+				padding: 10px;
+				display: none; /* Initially hide the hint message */
+			}
+			#easterEggsButton {
+				position: fixed;
+				top: 10px;
+				left: 10px;
+				padding: 5px 10px;
+				background-color: #007bff;
+				color: #fff;
+				border: none;
+				border-radius: 5px;
+				cursor: pointer;
+				font-size: 14px;
+			}
+			#easterEggsList {
+				position: fixed;
+				top: 50px;
+				left: 10px;
+				width: calc(50% - 20px); /* Adjust the width according to container width */
+				background-color: #fff;
+				border: 1px solid #ccc;
+				border-radius: 5px;
+				padding: 10px;
+				display: none; /* Initially hide the easter eggs list */
+			}
 		</style>
 	</head>
 	<body>
@@ -76,6 +123,28 @@
 			/>
 			<button id="magicButton" onclick="checkMagicNumber()">See the Magic</button>
 			<p id="result"></p>
+			<button id="hintButton" onclick="toggleHint()">Hints</button>
+			<div id="hintMessage">
+				<p>You need to be fluent in English to solve this</p>
+			</div>
+			<button id="easterEggsButton" onclick="toggleEasterEggs()">Easter Eggs to find</button>
+			<div id="easterEggsList">
+				<p>Can you find all of these easter eggs?</p>
+				<ul>
+					<li>Nice ;)</li>
+					<li>Be responsible!</li>
+					<li>You're old...</li>
+					<li>God's number!... It's a Rubik's Cube thing... Look it up!</li>
+					<li>It's over 9000!</li>
+					<li>The answer to the Ultimate Question of Life, the Universe, and Everything</li>
+					<li>Say hi to Doc Brown for me!</li>
+					<li>Like the dogs?</li>
+					<li>Mew!</li>
+					<li>The Best Universe</li>
+					<li>I love you 3000</li>
+					<li>Devil "Hey! thats mine!"</li>
+				</ul>
+			</div>
 		</div>
 
 		<script>
@@ -84,7 +153,6 @@
 				var resultElement = document.getElementById("result");
 				var numberAsWords, newNumber;
 
-				// Check for easter eggs
 				var easterEggs = {
 					69: "Nice ;)",
 					420: "Be responsible!",
@@ -100,75 +168,59 @@
 					666: 'Devil "Hey! thats mine!"',
 				};
 
-				// Clear previous content
 				resultElement.innerHTML = "";
 
 				var interval = setInterval(function () {
-					// Convert userNumber to words
 					numberAsWords = numberToWords(userNumber);
-
-					// Calculate the length of the word representation
 					newNumber = numberAsWords.length;
 
-					// Check if the number is an Easter egg
 					if (easterEggs[userNumber]) {
 						resultElement.innerHTML += easterEggs[userNumber] + "<br>";
 					}
 
-					// Display the transformation on a new line
 					resultElement.innerHTML += userNumber + " is " + newNumber + "<br>";
 
-					// Update userNumber with the new count
 					userNumber = newNumber;
 
 					if (userNumber === 4) {
-						clearInterval(interval); // Stop the interval if userNumber is 4
+						clearInterval(interval);
 						setTimeout(function () {
 							resultElement.innerHTML += "<br>And " + userNumber + " is a magic number!";
-						}, 500); // Delay of 0.5 seconds before displaying the final message
+						}, 500);
 					}
-				}, 500); // Interval of 0.5 seconds between each line
+				}, 500);
 			}
 
-			// Function to convert a number to its word representation
 			function numberToWords(number) {
-				// Main logic for number conversion
-				// Array of words for single-digit numbers
 				var words = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"];
 				var teens = ["", "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen"];
 				var tens = ["", "", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety"];
 				var scales = ["", "thousand", "million", "billion", "trillion", "quadrillion", "quintillion"];
 
-				// If number is a single digit, return its word representation
 				if (number >= 0 && number <= 9) {
 					return words[number];
 				}
 
-				// If number is 10, return its word representation
 				if (number === 10) {
 					return "ten";
 				}
 
-				// If number is between 11 and 19, return the word representation for teens
 				if (number >= 11 && number <= 19) {
 					return teens[number - 10];
 				}
 
-				// If number is a two-digit number (excluding teens), return its word representation
 				if (number >= 20 && number <= 99) {
 					var digit1 = Math.floor(number / 10);
 					var digit2 = number % 10;
 					return tens[digit1] + (digit2 !== 0 ? " " + words[digit2] : "");
 				}
 
-				// If number is a three-digit number
 				if (number >= 100 && number <= 999) {
 					var digit1 = Math.floor(number / 100);
 					var remainingDigits = number % 100;
 					return words[digit1] + " hundred" + (remainingDigits !== 0 ? " and " + numberToWords(remainingDigits) : "");
 				}
 
-				// Iterate through scales (thousands, millions, billions, etc.)
 				for (var i = 1; i < scales.length; i++) {
 					var divisor = Math.pow(1000, i);
 					if (number < divisor * 1000) {
@@ -178,16 +230,22 @@
 					}
 				}
 
-				// If number is exactly 1000, return its word representation
 				if (number === 1000) {
 					return "one thousand";
 				}
 
-				// For other cases (numbers greater than 1000), return an empty string
 				return "";
+			}
+
+			function toggleHint() {
+				var hintMessage = document.getElementById("hintMessage");
+				hintMessage.style.display = hintMessage.style.display === "block" ? "none" : "block";
+			}
+
+			function toggleEasterEggs() {
+				var easterEggsList = document.getElementById("easterEggsList");
+				easterEggsList.style.display = easterEggsList.style.display === "block" ? "none" : "block";
 			}
 		</script>
 	</body>
 </html>
-
-<!-- Add a hint button, and add an easter egg section -->
