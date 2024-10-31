@@ -1,136 +1,129 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<h2>Can you figure out WHY, </h2>
-		<title>Magic 4 game</title>
-		<style>
-			/* Some basic styling */
-			body {
-				font-family: Arial, sans-serif;
-				margin: 0;
-				padding: 0;
-				background-color: #f4f4f4;
-				display: flex;
-				justify-content: center;
-				align-items: center;
-				height: 100vh;
-			}
-			.container {
-				text-align: center; /* Center text within container */
-				position: relative; /* Position container relatively for absolute positioning of buttons */
-			}
-			h1 {
-				color: #333;
-			}
-			button {
-				padding: 10px 20px;
-				background-color: #007bff;
-				color: #fff;
-				border: none;
-				border-radius: 5px;
-				cursor: pointer;
-				font-size: 16px;
-			}
-			button:hover {
-				background-color: #0056b3;
-			}
-			p {
-				color: #666;
-			}
-			input[type="number"] {
-				padding: 10px;
-				width: 200px;
-				border-radius: 5px;
-				border: 1px solid #ccc;
-				box-sizing: border-box;
-				font-size: 16px;
-				margin-bottom: 10px;
-			}
-			#messageInput {
-				width: 100%;
-				padding: 10px;
-				margin-bottom: 10px;
-				box-sizing: border-box;
-			}
-			#messageList {
-				list-style-type: none;
-				padding: 0;
-			}
-			.message {
-				background-color: #fff;
-				padding: 10px;
-				margin-bottom: 5px;
-				border-radius: 5px;
-				box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-			}
-			#hintButton {
-				position: fixed;
-				top: 10px;
-				right: 50px;
-				padding: 5px 10px;
-				background-color: #007bff;
-				color: #fff;
-				border: none;
-				border-radius: 5px;
-				cursor: pointer;
-				font-size: 14px;
-			}
-			#hintMessage {
-				position: fixed;
-				top: 50px;
-				right: 10px;
-				width: calc(50% - 20px); /* Adjust the width according to container width */
-				background-color: #fff;
-				border: 1px solid #ccc;
-				border-radius: 5px;
-				padding: 10px;
-				display: none; /* Initially hide the hint message */
-			}
-			#easterEggsButton {
-				position: fixed;
-				top: 10px;
-				left: 10px;
-				padding: 5px 10px;
-				background-color: #007bff;
-				color: #fff;
-				border: none;
-				border-radius: 5px;
-				cursor: pointer;
-				font-size: 14px;
-			}
-			#easterEggsList {
-				position: fixed;
-				top: 50px;
-				left: 10px;
-				width: calc(50% - 20px); /* Adjust the width according to container width */
-				background-color: #fff;
-				border: 1px solid #ccc;
-				border-radius: 5px;
-				padding: 10px;
-				display: none; /* Initially hide the easter eggs list */
-			}
-		</style>
-	</head>
-	<body>
-		<div class="container">
-			<h1>4 is a Magic Number</h1>
-			<input
-				type="number"
-				id="userNumber"
-				placeholder="Pick any whole number"
-				onkeydown="if(event.keyCode===13)document.getElementById('magicButton').click()"
-			/>
-			<button id="magicButton" onclick="checkMagicNumber()">See the Magic</button>
-			<p id="result"></p>
-			<button id="hintButton" onclick="toggleHint()">Hints</button>
-			<div id="hintMessage">
-				<p>You need to be fluent in English to solve this</p>
-			</div>
-			<button id="easterEggsButton" onclick="toggleEasterEggs()">Easter Eggs to find</button>
-			<div id="easterEggsList">
-				<p>Can you find all of these easter eggs?</p>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Magic 4 Game</title>
+    <style>
+        /* Some basic styling */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            text-align: center; /* Center text within container */
+            position: relative; /* Position container relatively for absolute positioning of buttons */
+        }
+        h1 {
+            color: #333;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        p {
+            color: #666;
+        }
+        input[type="number"] {
+            padding: 10px;
+            width: 200px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+        #messageInput {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+        }
+        #messageList {
+            list-style-type: none;
+            padding: 0;
+        }
+        .message {
+            background-color: #fff;
+            padding: 10px;
+            margin-bottom: 5px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        #hintButton, #easterEggsButton {
+            position: fixed;
+            padding: 5px 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        #hintButton {
+            top: 10px;
+            right: 50px;
+        }
+        #hintMessage {
+            position: fixed;
+            top: 50px;
+            right: 10px;
+            width: calc(50% - 20px); /* Adjust the width according to container width */
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            display: none; /* Initially hide the hint message */
+        }
+        #easterEggsButton {
+            top: 10px;
+            left: 10px;
+        }
+        #easterEggsList {
+            position: fixed;
+            top: 50px;
+            left: 10px;
+            width: calc(50% - 20px); /* Adjust the width according to container width */
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            display: none; /* Initially hide the easter eggs list */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>4 is a Magic Number</h1>
+        <input
+            type="number"
+            id="userNumber"
+            placeholder="Pick any whole number"
+            onkeydown="if(event.keyCode===13)document.getElementById('magicButton').click()"
+        />
+        <button id="magicButton" onclick="checkMagicNumber()">See the Magic</button>
+        <p id="result"></p>
+        <button id="hintButton" onclick="toggleHint()">Hints</button>
+        <div id="hintMessage">
+            <p>You need to be fluent in English to solve this</p>
+        </div>
+        <button id="easterEggsButton" onclick="toggleEasterEggs()">Easter Eggs to find</button>
+        <div id="easterEggsList">
+            <p>Can you find all of these easter eggs?</p>
 				<ul>
 					<li>Noice!</li>
 					<li>#BlazeIt!</li>
